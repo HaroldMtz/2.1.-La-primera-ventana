@@ -3,32 +3,24 @@ using UnityEngine;
 [ExecuteAlways]
 public class SafeAreaFitter : MonoBehaviour
 {
-    RectTransform _rt;
-    Rect _lastSafe;
+    RectTransform rt;
+    Rect lastSafe;
 
-    void Awake() => _rt = GetComponent<RectTransform>();
-    void OnEnable() => Apply();
-
-    void Update()
-    {
-        if (Screen.safeArea != _lastSafe) Apply();
-    }
+    void OnEnable() { rt = GetComponent<RectTransform>(); Apply(); }
+    void Update() { if (Screen.safeArea != lastSafe) Apply(); }
 
     void Apply()
     {
-        _lastSafe = Screen.safeArea;
+        lastSafe = Screen.safeArea;
+        var min = lastSafe.position;
+        var max = lastSafe.position + lastSafe.size;
 
-        Vector2 anchorMin = _lastSafe.position;
-        Vector2 anchorMax = _lastSafe.position + _lastSafe.size;
+        min.x /= Screen.width;  min.y /= Screen.height;
+        max.x /= Screen.width;  max.y /= Screen.height;
 
-        anchorMin.x /= Screen.width;
-        anchorMin.y /= Screen.height;
-        anchorMax.x /= Screen.width;
-        anchorMax.y /= Screen.height;
-
-        _rt.anchorMin = anchorMin;
-        _rt.anchorMax = anchorMax;
-        _rt.offsetMin = Vector2.zero;
-        _rt.offsetMax = Vector2.zero;
+        rt.anchorMin = min;
+        rt.anchorMax = max;
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
     }
 }
